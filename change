@@ -102,7 +102,7 @@ bool farigiorn = false;
 
 long previousMillis;
 
-long buttonDealy;
+long buttonDealy = 500;
 long lastPressed;
 
 void setup() {
