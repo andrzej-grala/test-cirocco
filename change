@@ -102,6 +102,9 @@ bool farigiorn = false;
 
 long previousMillis;
 
+long buttonDealy;
+long lastPressed;
+
 void setup() {
   pinMode(button1, INPUT_PULLUP);
   attachInterrupt(digitalPinToInterrupt(button1), myISR, FALLING); // trigger when button pressed, but not when released.
@@ -243,7 +246,7 @@ void loop() {
 
     if (button1Pressed == true) {
       button1Pressed = false;
-      bit3 += 1;
+      bit3 += 1;  
     }    
 
     if (debugCAN0) {
@@ -977,6 +980,11 @@ void loop() {
     }
   }
 }
+
 void myISR() {
-    button1Pressed = true;
+    if (millis() - lastPressed > buttonDealy)
+    {
+      button1Pressed = true;
+      lastPressed = millis();
+    }
 }
