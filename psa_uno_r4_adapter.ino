@@ -262,7 +262,7 @@ void setup() {
   }
 
   RTC.begin();
-  RTCTime startTime(17, Month::FABRUARY, 2024, 15, 25, 00, DayOfWeek::SATURDAY, SaveLight::SAVING_TIME_ACTIVE);
+  RTCTime startTime(17, Month::FEBRUARY, 2024, 15, 25, 00, DayOfWeek::SATURDAY, SaveLight::SAVING_TIME_ACTIVE);
   RTC.setTime(startTime);
   
   //RTCTime initialTime(17, Month::FEBRUARY, 2024, 13, 03, 00, DayOfWeek::SATURDAY, SaveLight::SAVING_TIME_ACTIVE);
