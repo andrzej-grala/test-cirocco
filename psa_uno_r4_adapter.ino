@@ -263,12 +263,12 @@ void setup() {
 
   RTC.begin();
 
-  RTCTime initialTime(17, Month::FEBRUARY, 2024, 13, 03, 00, DayOfWeek::SATURDAY, SaveLight::SAVING_TIME_ACTIVE);
-  RTC.setTime(initialTime);
-
+  //RTCTime initialTime(17, Month::FEBRUARY, 2024, 13, 03, 00, DayOfWeek::SATURDAY, SaveLight::SAVING_TIME_ACTIVE);
+  RTC.getTime(currentTime);
+    
   // Set hour on CAN-BUS Clock
-  canMsgSnd.data[0] = hour();
-  canMsgSnd.data[1] = minute();
+  canMsgSnd.data[0] = currentTime.getHour();
+  canMsgSnd.data[1] = currentTime.getMinutes();
   canMsgSnd.can_id = 0x228;
   canMsgSnd.can_dlc = 2;
   CAN0.sendMessage( & canMsgSnd);
@@ -288,11 +288,11 @@ void setup() {
 
   if (SerialEnabled) {
     Serial.print("Current Time: ");
-    Serial.print(day());
+    Serial.print(currentTime.getDayOfMonth());
     Serial.print("/");
-    Serial.print(month());
+    Serial.print(getMonthIntFromName(currentTime.getMonth()));
     Serial.print("/");
-    Serial.print(year());
+    Serial.print(currentTime.getYear());
 
     Serial.print(" ");
 
@@ -1570,7 +1570,7 @@ void loop() {
 
         setTime(Time_hour, Time_minute, 0, Time_day, Time_month, Time_year);
         currentTime.setYear(Time_year);
-        currentTime.setMonthOfYear(getMonth(Time_month));
+        currentTime.setMonthOfYear(getMonthNameFromInt(Time_month));
         currentTime.setDayOfMonth(Time_day);
         currentTime.setHour(Time_hour);
         currentTime.setMinute(Time_minute);
@@ -2026,8 +2026,30 @@ byte checksumm_0E6(const byte* frame)
 }
 
 
-Month getMonth(int month)
+Month getMonthNameFromInt(int month)
 {
-  Month months[] = { Month::JANUARY, Month::FEBRUARY, Month::MARCH, Month::APRIL, Month::MAY, Month::JUNE, Month::JULY, Month::AUGUST, Month::SEPTEMBER, Month::OCTOBER, Month::NOVEMBER, Month::DECEMBER }
+  Month months[] = { Month::JANUARY, Month::FEBRUARY, Month::MARCH, Month::APRIL, Month::MAY, Month::JUNE, Month::JULY, Month::AUGUST, Month::SEPTEMBER, Month::OCTOBER, Month::NOVEMBER, Month::DECEMBER };
   return months[month];
+}
+
+int getMonthIntFromName(Month month)
+{
+
+  switch(month)
+  {
+    case Month::JANUARY : return 1; break;
+    case Month::FEBRUARY : return 2; break;
+    case Month::MARCH : return 3; break;
+    case Month::APRIL : return 4; break;
+    case Month::MAY : return 5; break;
+    case Month::JUNE : return 6; break;
+    case Month::JULY : return 7; break;
+    case Month::AUGUST : return 8; break;
+    case Month::SEPTEMBER : return 9; break;
+    case Month::OCTOBER : return 10; break;
+    case Month::NOVEMBER : return 11; break;
+    case Month::DECEMBER : return 12; break;
+    default: return 1;
+  }
+
 }
