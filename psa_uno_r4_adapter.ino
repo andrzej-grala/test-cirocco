@@ -90,7 +90,7 @@ byte scrollValue = 0;
 
 // Default variables
 bool Ignition = false;
-bool SerialEnabled = false;
+bool SerialEnabled = true;
 int Temperature = 0;
 bool EconomyMode = false;
 bool EngineRunning = false;
@@ -298,9 +298,9 @@ void setup() {
 
     Serial.print(" ");
 
-    Serial.print(hour());
+    Serial.print(currentTime.getHour());
     Serial.print(":");
-    Serial.print(minute());
+    Serial.print(currentTime.getMinutes());
 
     Serial.println();
   }
@@ -1482,10 +1482,9 @@ void loop() {
         }
 
         // Current Time
-        // If time is synced
         if (timeStatus() != timeNotSet) {
           canMsgSnd.data[0] = (year() - 1872); // Year would not fit inside one byte (0 > 255), substract 1872 and you get this new range (1872 > 2127)
-          canMsgSnd.data[1] = month();
+          canMsgSnd.data[1] =  month();
           canMsgSnd.data[2] = day();
           canMsgSnd.data[3] = hour();
           canMsgSnd.data[4] = minute();
@@ -1500,6 +1499,7 @@ void loop() {
           canMsgSnd.data[5] = 0x3F;
           canMsgSnd.data[6] = 0xFE;
         }
+        
         canMsgSnd.can_id = 0x276;
         canMsgSnd.can_dlc = 7;
         CAN1.sendMessage( & canMsgSnd);
